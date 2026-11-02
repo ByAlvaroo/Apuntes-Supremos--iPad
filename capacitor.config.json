@@ -1,0 +1,16 @@
+{
+  "appId": "com.byalvaro.apuntessupremos",
+  "appName": "Apuntes Supremos",
+  "webDir": "www",
+  "server": {
+    "url": "https://byalvaroo.github.io/Apuntes-Supremos/",
+    "errorPath": "offline.html"
+  },
+  "ios": {
+    "limitsNavigationsToAppBoundDomains": true,
+    "contentInset": "never",
+    "scrollEnabled": false,
+    "backgroundColor": "#f4f6fb",
+    "preferredContentMode": "desktop"
+  }
+}

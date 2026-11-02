@@ -1,0 +1,11 @@
+{
+  "name": "apuntes-supremos-ipad",
+  "version": "3.0.0",
+  "private": true,
+  "description": "App de iPad de Apuntes Supremos (Capacitor). HECHO POR @BYALVARO__",
+  "dependencies": {
+    "@capacitor/cli": "6.2.0",
+    "@capacitor/core": "6.2.0",
+    "@capacitor/ios": "6.2.0"
+  }
+}
