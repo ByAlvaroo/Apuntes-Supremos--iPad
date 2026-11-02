@@ -1,0 +1,31 @@
+name: App de iPad
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  ipa:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npx cap add ios
+      - name: Ajustes de la app
+        run: |
+          PL=ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Add :WKAppBoundDomains array" "$PL"
+          i=0; for d in byalvaroo.github.io cdn.jsdelivr.net api.github.com generativelanguage.googleapis.com api.openai.com www.overleaf.com; do /usr/libexec/PlistBuddy -c "Add :WKAppBoundDomains:$i string $d" "$PL"; i=$((i+1)); done
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName Apuntes" "$PL" || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Apuntes" "$PL"
+          for f in ios/App/App/Assets.xcassets/AppIcon.appiconset/*.png; do sips -z 1024 1024 icon.png --out "$f"; done
+      - run: npx cap sync ios
+      - name: Compilar
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -archivePath build/App.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" | tail -20
+          mkdir -p Payload && cp -R build/App.xcarchive/Products/Applications/App.app Payload/
+          zip -qr ../../ApuntesSupremos-iPad.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ApuntesSupremos-iPad
+          path: ApuntesSupremos-iPad.ipa
